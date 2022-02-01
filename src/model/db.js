@@ -4,8 +4,11 @@ import mongoose from 'mongoose'
 // const mongoose = new Mongoose()
 // const mongoose = require('mongoose')
 
-// const url = `mongodb+srv://gardener1:<plantsrcool>@my-sample-cluster-b3ugy.mongodb.net/<commonHousePlants>?retryWrites=true&w=majority`;
-const url = `mongodb+srv://gardener1:plantsrcool@cluster0.k2ppf.mongodb.net/commonHousePlants?retryWrites=true&w=majority`;
+const password = process.env.SAMPLE_PASSWORD
+const user = process.env.SAMPLE_PASSWORD
+const dbName = process.env.DB_NAME
+
+const url = `mongodb+srv://${user}:${password}@cluster0.k2ppf.mongodb.net/commonHousePlants?retryWrites=true&w=majority`;
 
 
 

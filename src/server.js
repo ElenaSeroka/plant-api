@@ -61,16 +61,10 @@ const main = async () => {
       })
   })
 
-//   // Starts the HTTP server listening for connections.
-//   app.listen(process.env.PORT, () => {
-//     console.log(`Server running at http://localhost:${process.env.PORT}`)
-//     console.log('Press Ctrl-C to terminate...')
-//   })
-// }
-
+const port = 5000
   // Starts the HTTP server listening for connections.
-  app.listen('5000', () => {
-    console.log(`Server running at http://localhost:5000`)
+  app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`)
     console.log('Press Ctrl-C to terminate...')
   })
 }
