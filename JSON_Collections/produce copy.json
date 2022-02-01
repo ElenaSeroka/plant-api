@@ -1,0 +1,17 @@
+{
+    "count": 3,
+    "collection_name": "Decorative", 
+    "results": [
+            {"non-blooming":[
+                {"id":1,"name": ""},
+                {"id":2,"name": ""}
+            ]
+            }, 
+            {"blooming":[
+                {"id":1,"name": ""},
+                {"id":2,"name": ""}
+            ]
+            }
+    ]
+}
+

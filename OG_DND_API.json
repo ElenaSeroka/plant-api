@@ -1,0 +1,42 @@
+{
+    "count": 3,
+    "results": [
+        {
+            "index": "acid-arrow",
+            "name": "Acid Arrow",
+            "url": "/api/spells/acid-arrow"
+        },
+        {
+            "index": "acid-splash",
+            "name": "Acid Splash",
+            "url": "/api/spells/acid-splash"
+        },
+        {
+            "index": "aid",
+            "name": "Aid",
+            "url": "/api/spells/aid"
+        }
+    ]
+}
+
+{
+    "count": 3,
+    "results": [
+        {
+            "id": "acid-arrow",
+            "name": "Acid Arrow",
+            "url": "/api/spells/acid-arrow"
+        },
+        {
+            "id": "acid-splash",
+            "name": "Acid Splash",
+            "url": "/api/spells/acid-splash"
+        },
+        {
+            "id": "aid",
+            "name": "Aid",
+            "url": "/api/spells/aid"
+        }
+    ]
+}
+

@@ -1,0 +1,23 @@
+{
+    "count": 3,
+    "collection_name": "Produce", 
+    "results": [
+        {
+            "id": "green_onions",
+            "name": "Green Onions",
+            "url": "../api/plants/produce/green_onions",
+            "linked_urls": "../api/plants/produce"
+        },
+        {
+            "id": "ginger",
+            "name": "Ginger",
+            "url": "../api/plants/produce/ginger"
+        },
+        {
+            "id": "strawberry",
+            "name": "Strawberry",
+            "url": "../api/plants/produce/strawberry"
+        }
+    ]
+}
+
