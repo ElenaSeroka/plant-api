@@ -6,6 +6,11 @@
  * @version 1.0.0
  */
 
+import 'dotenv/config' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+import dotenv from 'dotenv'
+
+dotenv.config();
+
 import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
@@ -61,10 +66,11 @@ const main = async () => {
       })
   })
 
-const port = 5000
+  const portnr = process.env.PORT_NR
+
   // Starts the HTTP server listening for connections.
-  app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`)
+  app.listen(portnr, () => {
+    console.log(`Server running at http://localhost:${portnr}`)
     console.log('Press Ctrl-C to terminate...')
   })
 }
