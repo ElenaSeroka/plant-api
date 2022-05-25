@@ -12,18 +12,16 @@
  export const router = express.Router()
  const controller = new ResourceController()
 
+router.get('/api/plants', (req, res) => controller.getAllPlants(req, res))
+router.get('/api/plants/id/:id', (req, res) => controller.getPlantById(req, res))
+router.get('/api/plants/name/:common', (req, res) => controller.getPlantByName(req, res))
 
+router.post('/api/plants/plant', (req, res) => controller.addPlant(req, res))
 
-
-
-
-router.get('/', (req, res) => res.json({ message: 'Hooray! Welcome to version 1 of this very simple RESTful API!' }))
-
-// router.get('/api/plants', (req, res) => controller.addPlant(req, res))
-// router.get('/api/plants/req.params', (req, res) => controller.addPlant(req, res))
-router.post('/api/plants', (req, res) => controller.addPlant(req, res))
 // router.put('/api/plants', (req, res) => controller.addPlant(req, res))
-router.delete('/api/plants', (req, res) => controller.deletePlant(req, res))
+
+router.delete('/api/plants/id/:id', (req, res) => controller.deletePlantById(req, res))
+router.delete('/api/plants/name/:common', (req, res) => controller.deletePlantByCommonName(req, res))
 
 
 
