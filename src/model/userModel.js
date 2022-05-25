@@ -9,20 +9,20 @@ import mongoose from 'mongoose'
 
 // Create a schema.
 const schema = new mongoose.Schema({
-    commonName: {
+    _id: {
         type: String,
-        required: true,
-        unique:true,
-        trim: true
+        required: true
     },
-    typeOfPlant: {
-        // herb, decorative plant, edible plant, blooming plant, green plant
-        type: String,
-        required: true,
-        trim: true
+    commonName: {
+        type: String
     },
     latinName: {
         type: String
+    },
+    // herb, decorative plant, edible plant, blooming plant, green plant
+    typeOfPlant: {
+        type: String,
+        required: true
     },
     description: {
         type: String
@@ -71,6 +71,9 @@ const schema = new mongoose.Schema({
         versionKey: false
 
 })
+
+
+
 
 // Create an plant model using the schema.
 export const Plant = mongoose.model('Plant', schema)

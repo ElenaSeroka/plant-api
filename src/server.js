@@ -16,22 +16,27 @@ import cors from 'cors'
 import helmet from 'helmet'
 import logger from 'morgan'
 import { router } from './routes/router.js'
-// import { connectDB } from './config/mongoose.js'
+import { connectToDB } from './config/db.js'
 
 /**
  * The main function of the application.
  */
 const main = async () => {
-  // await connectDB()
+  await connectToDB()
+
+
 
   const app = express()
+
+  app.use(express.urlencoded({ extended: false }))
+  
+
   app.use(express.json({ limit: '500kb' }))
   // Set various HTTP headers to make the application little more secure (https://www.npmjs.com/package/helmet).
   app.use(helmet())
 
   app.use(cors())
 
-  // Set up a morgan logger using the dev format for log entries.
   app.use(logger('dev'))
 
   // Parse requests of the content type application/json.
