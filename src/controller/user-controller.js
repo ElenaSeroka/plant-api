@@ -21,11 +21,19 @@ export class UserController {
      * @param {Function} next - Express next middleware function.
      */
     async login(req, res, next) {
+        console.log('logging in...')
         try {
+            console.log(req.body.email)
+            console.log(req.body.password)
+
+            // const user = await User.findOne({ email: req.body.email })
+
             const user = await User.authenticate(req.body.email, req.body.password)
+
             const payload = {
                 sub: user.email
             }
+
 
             const privatekey = process.env.SECRET
             const accessToken = jwt.sign(payload, privatekey, {
@@ -33,11 +41,16 @@ export class UserController {
                 expiresIn: process.env.ACCESS_TOKEN_LIFE
             })
 
+
+            console.log(accessToken)
+
             res
                 .status(200)
                 .json({
                     access_token: accessToken
                 })
+
+
         } catch (error) {
             // Authentication failed.
             const err = createError(401)
@@ -55,15 +68,19 @@ export class UserController {
      * @param {Function} next - Express next middleware function.
      */
     async register(req, res, next) {
+
+        // console.log(req)
         try {
-            const user = await User.insert({
+            const user = await new User({
                 email: req.body.email,
                 password: req.body.password
             })
 
+            const response = await user.save()
+
             res
                 .status(201)
-                .json({ id: user.id })
+                .json({ message: response })
         } catch (error) {
             let err = error
 
@@ -87,7 +104,7 @@ export class UserController {
 
         if (authorization?.[0] !== 'Bearer') {
             // next(createError(401))
-            res.status(401).json({message: 'Invalid token'})
+            res.status(401).json({ message: 'Invalid token' })
             res
             return
         }
@@ -99,7 +116,7 @@ export class UserController {
                     if (error) {
                         console.log('-----------------------------')
                         // res.sendStatus(403)
-                        res.status(403).json("Authorization failed. Please check your jwt token.");                        
+                        res.status(403).json("Authorization failed. Please check your jwt token.");
                     }
                     req.user = response.sub
                 })

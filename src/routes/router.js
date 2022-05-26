@@ -12,28 +12,25 @@
  
  export const router = express.Router()
  const controller = new ResourceController()
- const jwtChecker = new UserController()
+ const jwtChecker = new UserController()   
 
-router.get('/api/plants', jwtChecker.authenticateJWT, (req, res, next) => controller.getAllPlants(req, res))
-
-
-router.get('/api/plants/id/:id', (req, res) => controller.getPlantById(req, res))
-router.get('/api/plants/name/:common', (req, res) => controller.getPlantByName(req, res))
-
-router.post('/api/plants/plant', (req, res) => controller.addPlant(req, res))
-
-router.post('/api/register', (req, res) => controller.addPlant(req, res))
-router.post('/api/login', (req, res) => controller.addPlant(req, res))
+router.get('plants', jwtChecker.authenticateJWT, (req, res, next) => controller.getAllPlants(req, res))
 
 
+router.get('plants/id/:id', jwtChecker.authenticateJWT, (req, res) => controller.getPlantById(req, res))
+router.get('plants/name/:common', jwtChecker.authenticateJWT, (req, res) => controller.getPlantByName(req, res))
+
+router.post('plants/plant', jwtChecker.authenticateJWT, (req, res) => controller.addPlant(req, res))
+
+router.post('users/register', jwtChecker.authenticateJWT, (req, res, next) => jwtChecker.register(req, res, next))
+router.post('users/login', jwtChecker.authenticateJWT, (req, res, next) => jwtChecker.login(req, res, next))
 
 
+router.put('plants/plant/:id', jwtChecker.authenticateJWT, (req, res) => controller.updatePlantById(req, res))
+router.put('plants/plant/:common', jwtChecker.authenticateJWT, (req, res) => controller.updatePlantById(req, res))
 
-router.put('/api/plants/plant/:id', (req, res) => controller.updatePlantById(req, res))
-router.put('/api/plants/plant/:common', (req, res) => controller.updatePlantById(req, res))
-
-router.delete('/api/plants/id/:id', (req, res) => controller.deletePlantById(req, res))
-router.delete('/api/plants/name/:common', (req, res) => controller.deletePlantByCommonName(req, res))
+router.delete('plants/id/:id', jwtChecker.authenticateJWT, (req, res) => controller.deletePlantById(req, res))
+router.delete('plants/name/:common', jwtChecker.authenticateJWT, (req, res) => controller.deletePlantByCommonName(req, res))
 
 
 

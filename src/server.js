@@ -30,6 +30,9 @@ const main = async () => {
 
   app.use(express.urlencoded({ extended: false }))
   
+  app.use((req, res, next) => {
+    next()
+    })
 
   app.use(express.json({ limit: '500kb' }))
   // Set various HTTP headers to make the application little more secure (https://www.npmjs.com/package/helmet).
@@ -41,9 +44,14 @@ const main = async () => {
 
   // Parse requests of the content type application/json.
   app.use(express.json())
+  
+
 
   // Register routes.
-  app.use('/', router)
+  app.use('/api/', router)
+
+  // Executes middleware before the routes.
+
 
   // Error handler.
   app.use(function (err, req, res, next) {
@@ -70,6 +78,8 @@ const main = async () => {
         stack: err.stack
       })
   })
+
+
 
   const portnr = process.env.PORT_NR
 
