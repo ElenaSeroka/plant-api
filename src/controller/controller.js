@@ -2,7 +2,6 @@
 /**
 * Module for the AccountController.
 *
-* @author Mats Loock
 * @author Elena Seroka
 * @version 1.0.0
 */
@@ -11,7 +10,6 @@ import jwt from 'jsonwebtoken'
 import createError from 'http-errors'
 import { Plant } from '../model/plantModel.js'
 // import mongoose from 'mongoose'
-
 
 /**
  * Encapsulates a controller.
@@ -23,6 +21,55 @@ export class ResourceController {
      * @param {object} req - Express request object.
      * @param {object} res - Express response object.
      */
+
+
+    //---------------------------------------------------------GET----------------------------------------------------------------------------------
+
+    async getAllPlants(req, res) {
+        try {
+            let plants = await Plant.find()
+            if (plants) {
+                res.status(200).json(plants)
+            }
+            res.status(404).json({ message: "No with collection with that name exists!" })
+        } catch (error) {
+            res.status(401).json(error.message)
+            console.log(error)
+        }
+    }
+
+    async getPlantById(req, res) {
+        try {
+            let id = req.params.id
+            let plant = await Plant.findOne({ id: id })
+            if (plant) {
+                res.status(200).json(plant)
+            }
+            res.status(404).json({ message: "No plant with this id: " + id + " exists!" })
+        } catch (error) {
+            res.status(401).json(error.message)
+            console.log(error)
+        }
+    }
+
+
+    async getPlantByName(req, res) {
+        try {
+            let commonName = req.params.commonName
+            let plant = await Plant.findOne({ id: commonName })
+            if (plant) {
+                res.status(200).json(plant)
+            }
+            res.status(404).json({ message: "No plant with this name: " + commonName + " exists!" })
+        } catch (error) {
+            res.status(401).json(error.message)
+            console.log(error)
+        }
+    }
+
+
+    //---------------------------------------------------------POST----------------------------------------------------------------------------------
+
     async addPlant(req, res) {
         console.log('addAPlant')
         try {
@@ -38,8 +85,60 @@ export class ResourceController {
         }
     }
 
+    //---------------------------------------------------------UPDATE----------------------------------------------------------------------------------
+
+
+    async updatePlantById(req, res) {
+        try {
+            let id = req.params.id
+            let updateBody = req.body
+            const filter = { id: id }
+            const update = updateBody
+
+            let plant = await Plant.findOneAndUpdate(filter, update)
+            plant = await Plant.findOne(filter)
+
+            if (plant) {
+                res.status(201).json({
+                    message: "Entry updated",
+                    entry: plant
+                })
+            } else {
+            res.status(404).json({ message: "No plant with this id: " + id + " exists!" })
+        }
+        } catch (error) {
+            res.status(401).json(error.message)
+            console.log(error)
+        }
+    }
+
+    async updatePlantByName(req, res) {
+        try {
+            let id = req.params.commonName
+            let updateBody = req.body
+            const filter = { commonName: commonName }
+            const update = updateBody
+
+            let plant = await Plant.findOneAndUpdate(filter, update)
+            plant = await Plant.findOne(filter)
+
+            if (plant) {
+                res.status(201).json({
+                    message: "Entry updated",
+                    entry: plant
+                })
+            } else {
+            res.status(404).json({ message: "No plant with this id: " + id + " exists!" })
+        }
+        } catch (error) {
+            res.status(401).json(error.message)
+            console.log(error)
+        }
+    }
+    //---------------------------------------------------------DELETE----------------------------------------------------------------------------------
+
+
     async deletePlantById(req, res) {
-        console.log('deletePlant')
         try {
             let id = req.params.id
             const searchPlant = await Plant.findByIdAndDelete(id)
@@ -54,12 +153,10 @@ export class ResourceController {
     }
 
     async deletePlantByCommonName(req, res) {
-        console.log('deletePlant')
-        let commonName = req.params.commonName
         try {
+            let commonName = req.params.commonName
             const searchPlant = await Plant.findOneAndDelete({ commonName: commonName })
             if (searchPlant) {
-                console.log('deletePlantName 200')
                 res.status(200).json({ message: "Plant with this name: " + commonName + " has been deleted!" })
             }
             res.status(404).json({ message: "No plant with this name: " + commonName + " exists!" })
@@ -68,71 +165,4 @@ export class ResourceController {
             console.log(error)
         }
     }
-
-    async updatePlant(req, res) {
-        console.log('updatePlant')
-        try {
-            console.log('updatePlant')
-            res.status(200).json(response)
-        } catch (error) {
-            res.status(401).json(error.message)
-            console.log(error)
-        }
-    }
-
-    async getCollection(req, res) {
-        console.log('getCollection')
-        try {
-            console.log('getCollection')
-            res.status(200).json(response)
-
-        } catch (error) {
-            res.status(401).json(error.message)
-            console.log(error)
-        }
-    }
-
-    async getPlantById(req, res) {
-        console.log('getPlant')
-        try {
-            let id = req.params.id
-            let plant = await Plant.findOne({ id: req.params.id })
-            if (plant) {
-                res.status(200).json(plant)
-            }
-            res.status(404).json({ message: "No plant with this id: " + id + " exists!" })
-        } catch (error) {
-            res.status(401).json(error.message)
-            console.log(error)
-        }
-    }
-
-    // async getPlantByName(req, res) {
-    //     console.log('getPlant')
-    //     try {
-    //         let commonName = req.params.commonName
-    //         let plant = await Plant.findOne({ id: commonName })
-    //         if (plant) {
-    //             res.status(200).json(plant)
-    //         }
-    //         res.status(404).json({ message: "No plant with this name: " + commonName + " exists!" })
-    //     } catch (error) {
-    //         res.status(401).json(error.message)
-    //         console.log(error)
-    //     }
-    // }
-
-    // async getAllPlants(req, res) {
-    //     console.log('getAllPlants')
-    //     try {
-    //         let plants = await Plant.find()
-    //         if(plants){
-    //             res.status(200).json(plants)
-    //         }
-    //         res.status(404).json({ message: "No with that name exists!" })
-    //     } catch (error) {
-    //         res.status(401).json(error.message)
-    //         console.log(error)
-    //     }
-    // }
 }

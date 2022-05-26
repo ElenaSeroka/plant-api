@@ -8,17 +8,29 @@
 
  import express from 'express'
  import { ResourceController } from '../controller/controller.js'
+ import { UserController } from '../controller/user-controller.js'
  
  export const router = express.Router()
  const controller = new ResourceController()
+ const jwtChecker = new UserController()
 
-router.get('/api/plants', (req, res) => controller.getAllPlants(req, res))
+router.get('/api/plants', jwtChecker.authenticateJWT, (req, res, next) => controller.getAllPlants(req, res))
+
+
 router.get('/api/plants/id/:id', (req, res) => controller.getPlantById(req, res))
 router.get('/api/plants/name/:common', (req, res) => controller.getPlantByName(req, res))
 
 router.post('/api/plants/plant', (req, res) => controller.addPlant(req, res))
 
-// router.put('/api/plants', (req, res) => controller.addPlant(req, res))
+router.post('/api/register', (req, res) => controller.addPlant(req, res))
+router.post('/api/login', (req, res) => controller.addPlant(req, res))
+
+
+
+
+
+router.put('/api/plants/plant/:id', (req, res) => controller.updatePlantById(req, res))
+router.put('/api/plants/plant/:common', (req, res) => controller.updatePlantById(req, res))
 
 router.delete('/api/plants/id/:id', (req, res) => controller.deletePlantById(req, res))
 router.delete('/api/plants/name/:common', (req, res) => controller.deletePlantByCommonName(req, res))
