@@ -33,8 +33,6 @@ export class UserController {
             const payload = {
                 sub: user.email
             }
-
-
             const privatekey = process.env.SECRET
             const accessToken = jwt.sign(payload, privatekey, {
                 algorithm: 'HS256',
@@ -49,8 +47,6 @@ export class UserController {
                 .json({
                     access_token: accessToken
                 })
-
-
         } catch (error) {
             // Authentication failed.
             const err = createError(401)

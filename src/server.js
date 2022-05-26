@@ -24,8 +24,6 @@ import { connectToDB } from './config/db.js'
 const main = async () => {
   await connectToDB()
 
-
-
   const app = express()
 
   app.use(express.urlencoded({ extended: false }))

@@ -14,25 +14,25 @@
  const controller = new ResourceController()
  const jwtChecker = new UserController()   
 
-router.get('plants', jwtChecker.authenticateJWT, (req, res, next) => controller.getAllPlants(req, res))
+router.get('plants', jwtChecker.authenticateJWT, (req, res, next) => controller.getAllPlants(req, res, next))
 
 
-router.get('plants/id/:id', jwtChecker.authenticateJWT, (req, res) => controller.getPlantById(req, res))
-router.get('plants/name/:common', jwtChecker.authenticateJWT, (req, res) => controller.getPlantByName(req, res))
+router.get('plants/id/:id', jwtChecker.authenticateJWT, (req, res, next) => controller.getPlantById(req, res, next))
+router.get('plants/name/:common', jwtChecker.authenticateJWT, (req, res, next) => controller.getPlantByName(req, res, next))
 
-router.post('plants/plant', jwtChecker.authenticateJWT, (req, res) => controller.addPlant(req, res))
+router.post('plants/plant', jwtChecker.authenticateJWT, (req, res, next) => controller.addPlant(req, res, next))
 
 router.post('users/register', jwtChecker.authenticateJWT, (req, res, next) => jwtChecker.register(req, res, next))
 router.post('users/login', jwtChecker.authenticateJWT, (req, res, next) => jwtChecker.login(req, res, next))
 
 
-router.put('plants/plant/:id', jwtChecker.authenticateJWT, (req, res) => controller.updatePlantById(req, res))
-router.put('plants/plant/:common', jwtChecker.authenticateJWT, (req, res) => controller.updatePlantById(req, res))
+router.put('plants/plant/:id', jwtChecker.authenticateJWT, (req, res, next) => controller.updatePlantById(req, res, next))
+router.put('plants/plant/:common', jwtChecker.authenticateJWT, (req, res, next) => controller.updatePlantById(req, res, next))
 
-router.delete('plants/id/:id', jwtChecker.authenticateJWT, (req, res) => controller.deletePlantById(req, res))
-router.delete('plants/name/:common', jwtChecker.authenticateJWT, (req, res) => controller.deletePlantByCommonName(req, res))
+router.delete('plants/id/:id', jwtChecker.authenticateJWT, (req, res, next) => controller.deletePlantById(req, res, next))
+router.delete('plants/name/:common', jwtChecker.authenticateJWT, (req, res, next) => controller.deletePlantByCommonName(req, res, next))
 
-
+router.use('*', (req, res) => res.status(404).json({ message: "No such route exists!" }))
 
 
 
