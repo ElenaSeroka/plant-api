@@ -23,8 +23,8 @@ export class WebhookController {
      * @param {Function} next - Express next middleware function.
      */
 
-    
-    
+
+
     async registerWebhook(req, res, next) {
         let url = req.body.url
         let userUrl = await new Webhook({ url: url, secret: req.body.secret, user: req.body.user })
@@ -32,12 +32,14 @@ export class WebhookController {
         console.log(response)
         res.status(201).json(response)
 
-    } catch (error) {
+    } catch(error) {
         next(createError(error.status, error.message))
     }
 
     async pingWebhooks(req, res, next) {
+        console.log('webhook attempteed')
         try {
+            let newPlant = req.body
             let webhooks = await Webhook.find()
             if (webhooks) {
                 for (let i = 0; i < webhooks.length; i++) {
@@ -48,7 +50,7 @@ export class WebhookController {
                     let body = {
                         "user": user,
                         "secret": secret,
-                        "message": "Hello from the server!"
+                        "body": newPlant
                     }
                     let headers = {
                         'Content-Type': 'application/json;charset=UTF-8',
@@ -57,9 +59,12 @@ export class WebhookController {
                     }
                     axios.post(url, body, headers)
                 }
-                res.status(200).json({ message: "Webhooks pinged!" })
+                let result = {message:"Webhooks pinged!"}
+                res.status(200).json(result)
             }
-            res.status(404).json({ message: "Unsuccessful at sending webhooks!" })
+            else {
+                res.status(404).json({ message: "Unsuccessful at sending webhooks!" })
+            }
         } catch (error) {
             next(createError(error.status, error.message))
         }
