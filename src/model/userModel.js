@@ -23,7 +23,7 @@
    },
    password: {
      type: String,
-    //  minlength: [10, 'The password must be of minimum length 10 characters.'],
+     minlength: [10, 'The password must be of minimum length 10 characters.'],
      required: [true, 'User password required.']
    }
  },

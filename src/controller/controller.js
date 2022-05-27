@@ -28,8 +28,14 @@ export class ResourceController {
     async getAllPlants(req, res, next) {
         try {
             let plants = await Plant.find()
+            let result
+            const links = {
+                "self": { rel: "self", method: "GET", href: 'https://futureadress.herokuapp.com/api/plants/' },
+                "Create new plant": { rel: "Create new plant", method: "POST", title: 'Create plant', href: 'https://futureadress.herokuapp.com/api/plants' }
+            }
             if (plants) {
-                res.status(200).json(plants)
+                result = Object.assign({}, plants, links);
+                res.status(200).json(result)
             }
             res.status(404).json({ message: "No with collection with that name exists!" })
         } catch (error) {
@@ -100,8 +106,8 @@ export class ResourceController {
                     entry: plant
                 })
             } else {
-            res.status(404).json({ message: "No plant with this id: " + id + " exists!" })
-        }
+                res.status(404).json({ message: "No plant with this id: " + id + " exists!" })
+            }
         } catch (error) {
             next(createError(error.status, error.message))
         }
@@ -123,8 +129,8 @@ export class ResourceController {
                     entry: plant
                 })
             } else {
-            res.status(404).json({ message: "No plant with this id: " + id + " exists!" })
-        }
+                res.status(404).json({ message: "No plant with this id: " + id + " exists!" })
+            }
         } catch (error) {
             next(createError(error.status, error.message))
         }

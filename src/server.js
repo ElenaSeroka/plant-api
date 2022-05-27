@@ -42,11 +42,9 @@ const main = async () => {
 
   // Parse requests of the content type application/json.
   app.use(express.json())
-  
-
 
   // Register routes.
-  app.use('/api/', router)
+  app.use('/', router)
 
   // Executes middleware before the routes.
 

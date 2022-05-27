@@ -9,30 +9,36 @@
  import express from 'express'
  import { ResourceController } from '../controller/controller.js'
  import { UserController } from '../controller/user-controller.js'
+ import { WebhookController } from '../controller/webhook-controller.js'
+ import createError from 'http-errors'
+
  
  export const router = express.Router()
  const controller = new ResourceController()
  const jwtChecker = new UserController()   
+ const webhookController = new WebhookController()
+ 
+router.get('/api/plants', jwtChecker.authenticateJWT, (req, res, next) => controller.getAllPlants(req, res, next))
 
-router.get('plants', jwtChecker.authenticateJWT, (req, res, next) => controller.getAllPlants(req, res, next))
+router.get('/api/plants/id/:id', jwtChecker.authenticateJWT, (req, res, next) => controller.getPlantById(req, res, next))
+router.get('/api/plants/name/:common', jwtChecker.authenticateJWT, (req, res, next) => controller.getPlantByName(req, res, next))
 
+router.post('/api/plants', jwtChecker.authenticateJWT, (req, res, next) => controller.addPlant(req, res, next), 
+(req, res, next) => webhookController.pingWebhooks(req, res, next))
 
-router.get('plants/id/:id', jwtChecker.authenticateJWT, (req, res, next) => controller.getPlantById(req, res, next))
-router.get('plants/name/:common', jwtChecker.authenticateJWT, (req, res, next) => controller.getPlantByName(req, res, next))
+router.post('/api/users/register', jwtChecker.authenticateJWT, (req, res, next) => jwtChecker.register(req, res, next))
+router.post('/api/users/login', (req, res, next) => jwtChecker.login(req, res, next))
 
-router.post('plants/plant', jwtChecker.authenticateJWT, (req, res, next) => controller.addPlant(req, res, next))
+router.post('/api/webhook/register', jwtChecker.authenticateJWT, (req, res, next) => webhookController.registerWebhook(req, res, next))
+// router.post('/api/webhook/unregister', jwtChecker.authenticateJWT, (req, res, next) => webhookController.pingWebhooks(req, res, next))
 
-router.post('users/register', jwtChecker.authenticateJWT, (req, res, next) => jwtChecker.register(req, res, next))
-router.post('users/login', jwtChecker.authenticateJWT, (req, res, next) => jwtChecker.login(req, res, next))
+router.put('/api/plants/plant/:id', jwtChecker.authenticateJWT, (req, res, next) => controller.updatePlantById(req, res, next))
+router.put('/api/plants/plant/:common', jwtChecker.authenticateJWT, (req, res, next) => controller.updatePlantById(req, res, next))
 
+router.delete('/api/plants/id/:id', jwtChecker.authenticateJWT, (req, res, next) => controller.deletePlantById(req, res, next))
+router.delete('/api/plants/name/:common', jwtChecker.authenticateJWT, (req, res, next) => controller.deletePlantByCommonName(req, res, next))
 
-router.put('plants/plant/:id', jwtChecker.authenticateJWT, (req, res, next) => controller.updatePlantById(req, res, next))
-router.put('plants/plant/:common', jwtChecker.authenticateJWT, (req, res, next) => controller.updatePlantById(req, res, next))
-
-router.delete('plants/id/:id', jwtChecker.authenticateJWT, (req, res, next) => controller.deletePlantById(req, res, next))
-router.delete('plants/name/:common', jwtChecker.authenticateJWT, (req, res, next) => controller.deletePlantByCommonName(req, res, next))
-
-router.use('*', (req, res) => res.status(404).json({ message: "No such route exists!" }))
+router.use('*', (req, res, next) => next(createError(500)))
 
 
 
