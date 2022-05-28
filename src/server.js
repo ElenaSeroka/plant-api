@@ -22,7 +22,7 @@ import { connectToDB } from './config/db.js'
  * The main function of the application.
  */
 const main = async () => {
-  await connectToDB()
+  // await connectToDB()
 
   const app = express()
   app.use(express.static('/'))
@@ -77,7 +77,7 @@ const main = async () => {
   })
 
 
-  const PORT = process.env.PORT
+  const PORT = process.env.PORT_NR
   // const portnr = process.env.PORT_NR
 
   // Starts the HTTP server listening for connections.
