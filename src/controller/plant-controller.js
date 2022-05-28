@@ -22,6 +22,11 @@ export class ResourceController {
      */
 
 
+     welcomeMessage(req, res){
+        let result = 'Welcome to my Plant API!'
+        res.status(200).json(result) 
+     }
+
     //---------------------------------------------------------GET----------------------------------------------------------------------------------
 
     globalAdress() {
