@@ -18,8 +18,9 @@
  const jwtChecker = new UserController()   
  const webhookController = new WebhookController()
  
-router.get('/api', (req, res)=> controller.welcomeMessage(req, res))
+router.get('/api', (req, res) => controller.welcomeMessage(req, res))
 router.get('/api/plants', jwtChecker.authenticateJWT, (req, res, next) => controller.getAllPlants(req, res, next))
+// router.get('/api/plants', (req, res, next) => controller.getAllPlants(req, res, next))
 
 router.get('/api/plants/id/:id', jwtChecker.authenticateJWT, (req, res, next) => controller.getPlantById(req, res, next))
 router.get('/api/plants/name/:commonName', jwtChecker.authenticateJWT, (req, res, next) => controller.getPlantByName(req, res, next))
@@ -40,10 +41,6 @@ router.delete('/api/plants/id/:id', jwtChecker.authenticateJWT, (req, res, next)
 router.delete('/api/plants/name/:commonName', jwtChecker.authenticateJWT, (req, res, next) => controller.deletePlantByCommonName(req, res, next))
 
 router.use('*', (req, res, next) => next(createError(404)))
-
-router.use('*', (req, res, next) =>
-  next(createError(500, 'Internal Server Error'))
-)
 
 
 

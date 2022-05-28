@@ -83,16 +83,17 @@ export class UserController {
     }
 
     authenticateJWT(req, res, next) {
+        let authorization
         try {
             console.log('trying to authenticate...')
-            const authorization = req.headers.authorization?.split(' ')
+            authorization = req.headers.authorization?.split(' ')
             if (authorization?.[0] !== 'Bearer') {
                 return next(createError(401, 'Invalid token'))
             }
         } catch (error) {
             next(err)
         }
-        
+
         try {
             const publicKey = process.env.SECRET
             jwt.verify(authorization[1], publicKey,
