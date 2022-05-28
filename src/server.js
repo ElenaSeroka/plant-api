@@ -6,10 +6,10 @@
  * @version 1.0.0
  */
 
-import 'dotenv/config' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
-import dotenv from 'dotenv'
+// import 'dotenv/config' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+// import dotenv from 'dotenv'
 
-dotenv.config();
+// dotenv.config();
 
 import express from 'express'
 import cors from 'cors'
@@ -25,16 +25,16 @@ const main = async () => {
   await connectToDB()
 
   const app = express()
- app.use(express.static('/'))
+  app.use(express.static('/'))
 
 
   app.use(express.urlencoded({ extended: false }))
-  
+
   app.use((req, res, next) => {
     next()
-    })
+  })
 
-  app.use(express.json({ limit: '500kb' }))
+  // app.use(express.json({ limit: '500kb' }))
   // Set various HTTP headers to make the application little more secure (https://www.npmjs.com/package/helmet).
   app.use(
     helmet({
@@ -50,43 +50,30 @@ const main = async () => {
     })
   )
 
-  app.use(cors())
+  app.set('trust proxy', 1)
+  app.use(cors(), router)
 
   app.use(logger('dev'))
+  app.use('/', router)
 
   // Parse requests of the content type application/json.
   app.use(express.json())
 
   // Register routes.
-  app.use('/', router)
 
   // Executes middleware before the routes.
 
 
   // Error handler.
-  app.use(function (err, req, res, next) {
+  app.use( (err, req, res, next) => {
     err.status = err.status || 500
-
-    if (req.app.get('env') !== 'development') {
-      res
-        .status(err.status)
-        .json({
-          status: err.status,
-          message: err.message
-        })
-      return
-    }
-
-    // Development only!
-    // Only providing detailed error in development.
-    return res
+    res
       .status(err.status)
       .json({
         status: err.status,
-        message: err.message,
-        innerException: err.innerException,
-        stack: err.stack
+        message: err.message
       })
+    return
   })
 
 
