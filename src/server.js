@@ -77,7 +77,7 @@ const main = async () => {
   })
 
 
-  const PORT = process.env.PORT_NR
+  const PORT = process.env.PORT
   // const portnr = process.env.PORT_NR
 
   // Starts the HTTP server listening for connections.
