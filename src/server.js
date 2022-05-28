@@ -17,7 +17,6 @@ import helmet from 'helmet'
 import logger from 'morgan'
 import { router } from './routes/router.js'
 import { connectToDB } from './config/db.js'
-import cors from 'cors'
 
 /**
  * The main function of the application.
