@@ -76,12 +76,12 @@ const main = async () => {
   })
 
 
-
-  const portnr = process.env.PORT_NR
+  const PORT = process.env.PORT
+  // const portnr = process.env.PORT_NR
 
   // Starts the HTTP server listening for connections.
-  app.listen(portnr, () => {
-    console.log(`Server running at http://localhost:${portnr}`)
+  app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`)
     console.log('Press Ctrl-C to terminate...')
   })
 }
