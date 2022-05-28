@@ -21,8 +21,8 @@ import { connectToDB } from './config/db.js'
 /**
  * The main function of the application.
  */
-//const main = async () => {
-  // await connectToDB()
+const main = async () => {
+  await connectToDB()
 
   const app = express()
   app.use(express.static('/'))
@@ -85,6 +85,6 @@ import { connectToDB } from './config/db.js'
     console.log(`Server running at http://localhost:${PORT}`)
     console.log('Press Ctrl-C to terminate...')
   })
-//}
+}
 
-// main().catch(console.error)
+main().catch(console.error)
