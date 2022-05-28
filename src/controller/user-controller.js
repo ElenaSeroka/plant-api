@@ -21,37 +21,29 @@ export class UserController {
      * @param {Function} next - Express next middleware function.
      */
     async login(req, res, next) {
-        console.log('logging in...')
+        console.log('Logging in...')
         try {
-            console.log(req.body.email)
-            console.log(req.body.password)
-
-            // const user = await User.findOne({ email: req.body.email })
-
             const user = await User.authenticate(req.body.email, req.body.password)
 
             const payload = {
                 sub: user.email
             }
+
             const privatekey = process.env.SECRET
             const accessToken = jwt.sign(payload, privatekey, {
                 algorithm: 'HS256',
                 expiresIn: process.env.ACCESS_TOKEN_LIFE
             })
 
-
-            console.log(accessToken)
-
             res
                 .status(200)
                 .json({
                     access_token: accessToken
                 })
+
         } catch (error) {
-            // Authentication failed.
             const err = createError(401)
             err.innerException = error
-
             next(err)
         }
     }
@@ -64,8 +56,6 @@ export class UserController {
      * @param {Function} next - Express next middleware function.
      */
     async register(req, res, next) {
-
-        // console.log(req)
         try {
             const user = await new User({
                 email: req.body.email,
@@ -73,13 +63,12 @@ export class UserController {
             })
 
             const response = await user.save()
-
             res
                 .status(201)
                 .json({ message: response })
+
         } catch (error) {
             let err = error
-
             if (err.code === 11000) {
                 // Duplicated keys.
                 err = createError(409)
@@ -89,22 +78,21 @@ export class UserController {
                 err = createError(400)
                 err.innerException = error
             }
-
             next(err)
         }
     }
 
     authenticateJWT(req, res, next) {
-        console.log('trying to authenticateJWT')
-        const authorization = req.headers.authorization?.split(' ')
-
-        if (authorization?.[0] !== 'Bearer') {
-            // next(createError(401))
-            res.status(401).json({ message: 'Invalid token' })
-            res
-            return
+        try {
+            console.log('trying to authenticate...')
+            const authorization = req.headers.authorization?.split(' ')
+            if (authorization?.[0] !== 'Bearer') {
+                return next(createError(401, 'Invalid token'))
+            }
+        } catch (error) {
+            next(err)
         }
-
+        
         try {
             const publicKey = process.env.SECRET
             jwt.verify(authorization[1], publicKey,

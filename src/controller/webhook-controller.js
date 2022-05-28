@@ -5,7 +5,6 @@
  */
 
 // import createError from 'http-errors'
-import jwt from 'jsonwebtoken'
 import createError from 'http-errors'
 import { Webhook } from '../model/webhook-model.js'
 import axios from 'axios'
@@ -26,18 +25,18 @@ export class WebhookController {
 
 
     async registerWebhook(req, res, next) {
-        let url = req.body.url
-        let userUrl = await new Webhook({ url: url, secret: req.body.secret, user: req.body.user })
-        const response = await userUrl.save()
-        console.log(response)
-        res.status(201).json(response)
-
-    } catch(error) {
-        next(createError(error.status, error.message))
+        try {
+            let url = req.body.url
+            let userUrl = await new Webhook({ url: url, secret: req.body.secret, user: req.body.user })
+            const response = await userUrl.save()
+            res.status(201).json(response)
+        } catch (error) {
+            next(createError(error.status, error.message))
+        }
     }
 
     async pingWebhooks(req, res, next) {
-        console.log('webhook attempteed')
+        console.log('Webhook attempted...')
         try {
             let newPlant = req.body
             let webhooks = await Webhook.find()
@@ -59,7 +58,7 @@ export class WebhookController {
                     }
                     axios.post(url, body, headers)
                 }
-                let result = {message:"Webhooks pinged!"}
+                let result = { message: "Webhooks pinged!" }
                 res.status(200).json(result)
             }
             else {

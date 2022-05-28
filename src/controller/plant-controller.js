@@ -31,14 +31,49 @@ export class ResourceController {
 
     async getAllPlants(req, res, next) {
         try {
+
+            let limit = parseInt(req.query.limit) || 5
+            let offset = parseInt(req.query.offset) || 0
+            let page = parseInt(req.query.page) || 1
+            let type = req.query.typeOfPlant
+
+            let currentPage = ((limit * page) - limit) + 1 + offset
             let plants = await Plant.find()
+                .skip(currentPage)
+                .limit(limit)
+
             let result
+            let count = await Plant.countDocuments()
+
+            const totalPages = Math.ceil(count / limit)
+
+            const query = Plant.find(
+                { typeOfPlant: type }
+            )
+
+
+
+            let filteredCollection = query.getFilter(); // `{ name: 'Jean-Luc Picard' }`
+            const doc = await query.exec();
+
+            console.log(doc)
+
+
+
+
+            let pagination = {
+                currentPage: page,
+                totalPages: totalPages,
+                totalNrOfPlants: count,
+                DocumentsPerPage: limit
+            }
+
             const links = {
                 "self": { rel: "self", method: "GET", href: this.globalAdress() },
                 "Create new plant": { rel: "Create new plant", method: "POST", title: 'Create plant', href: this.globalAdress() }
             }
             if (plants) {
-                result = Object.assign({}, plants, links)
+                result = Object.assign({}, pagination, plants, links)
                 res.status(200).json(result)
             }
             else {
@@ -103,6 +138,7 @@ export class ResourceController {
             let plant = await new Plant({ commonName: req.body.commonName, typeOfPlant: req.body.typeOfPlant, latinName: req.body.latinName, description: req.body.description, difficultyLevel: req.body.difficultyLevel, standardSize: req.body.standardSize, sunPreference: req.body.sunPreference, idealTemperature: req.body.idealTemperature, idealHumidity: req.body.idealHumidity, idealMoisture: req.body.idealMoisture, idealSoil: req.body.idealSoil, regrowthInstructions: req.body.regrowthInstructions, nutritionalInstructions: req.body.nutritionalInstructions, poisonous: req.body.poisonous, wikipediaLink: req.body.wikipediaLink })
             let result
             const response = await plant.save()
+            
             if (response) {
                 result = Object.assign({}, { message: "Plant with name: " + plant.commonName + " and id: " + plant._id + " was created and added to database." }, plant._doc,
                     {
@@ -113,9 +149,7 @@ export class ResourceController {
                     })
                 res.status(201).json(result)
                 next()
-            }
-
-            else {
+            } else {
                 next(createError(error.status, error.message))
             }
 
@@ -203,8 +237,9 @@ export class ResourceController {
                     })
                 res.status(201).json({ result })
             }
-            else {res.status(404).json({ message: "No plant with this id: " + id + " exists!" })
-        }
+            else {
+                res.status(404).json({ message: "No plant with this id: " + id + " exists!" })
+            }
         } catch (error) {
             next(createError(error.status, error.message))
         }
@@ -217,13 +252,13 @@ export class ResourceController {
             let result
             if (plant) {
                 result = Object.assign({}, { message: "Deletion successful." }, plant._doc,
-                {
-                    "self": { rel: "self", method: "DELETE", href: (this.globalAdress() + commonName) },
-                    update: { rel: "update", method: "PUT", title: 'Update plants', href: (this.globalAdress() + commonName) },
-                    "list plant by id": { rel: "list specific plant", method: "GET", href: (this.globalAdress() + commonName) },
-                    "parent": { rel: "Up", method: "GET", title: 'List plants', href: this.globalAdress() }
+                    {
+                        "self": { rel: "self", method: "DELETE", href: (this.globalAdress() + commonName) },
+                        update: { rel: "update", method: "PUT", title: 'Update plants', href: (this.globalAdress() + commonName) },
+                        "list plant by id": { rel: "list specific plant", method: "GET", href: (this.globalAdress() + commonName) },
+                        "parent": { rel: "Up", method: "GET", title: 'List plants', href: this.globalAdress() }
 
-                })
+                    })
                 res.status(201).json({ result })
             }
             res.status(404).json({ message: "No plant with this name: " + commonName + " exists!" })
