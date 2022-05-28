@@ -38,7 +38,7 @@ router.put('/api/plants/name/:commonName', jwtChecker.authenticateJWT, (req, res
 router.delete('/api/plants/id/:id', jwtChecker.authenticateJWT, (req, res, next) => controller.deletePlantById(req, res, next))
 router.delete('/api/plants/name/:commonName', jwtChecker.authenticateJWT, (req, res, next) => controller.deletePlantByCommonName(req, res, next))
 
-router.use('*', (req, res, next) => next(createError(500)))
+router.use('*', (req, res, next) => next(createError(404)))
 
 
 
