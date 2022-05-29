@@ -5,11 +5,8 @@ import dotenv from 'dotenv'
 
 dotenv.config();
 
-// const mongoose = new Mongoose()
-// const mongoose = require('mongoose')
-
-export async function connectToDB(){
+export async function connectToDB() {
     await mongoose.connect(process.env.CONNECTION_STRING, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error(err))
+        .then(() => console.log('Connected to MongoDB'))
+        .catch(err => console.error(err))
 }

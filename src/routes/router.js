@@ -31,6 +31,7 @@ router.post('/users/register', jwtChecker.authenticateJWT, (req, res, next) => j
 router.post('/users/login', (req, res, next) => jwtChecker.login(req, res, next))
 
 router.post('/webhooks/register', jwtChecker.authenticateJWT, (req, res, next) => webhookController.registerWebhook(req, res, next))
+/ router.post('/webhook/unregister', jwtChecker.authenticateJWT, (req, res, next) => webhookController.pingWebhooks(req, res, next))
 
 router.put('/plants/id/:id', jwtChecker.authenticateJWT, (req, res, next) => controller.updatePlantById(req, res, next))
 router.put('/plants/common-name/:commonName', jwtChecker.authenticateJWT, (req, res, next) => controller.updatePlantByName(req, res, next))
@@ -39,3 +40,8 @@ router.delete('/plants/id/:id', jwtChecker.authenticateJWT, (req, res, next) => 
 router.delete('/plants/common-name/:commonName', jwtChecker.authenticateJWT, (req, res, next) => controller.deletePlantByCommonName(req, res, next))
 
 router.use('*', (req, res, next) => next(createError(404)))
+
+
+
+
+

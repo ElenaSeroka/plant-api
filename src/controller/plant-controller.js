@@ -7,7 +7,7 @@
 */
 
 import createError from 'http-errors'
-import { Plant } from '../model/plantModel.js'
+import { Plant } from '../model/plant-model.js'
 // import mongoose from 'mongoose'
 
 /**
@@ -15,10 +15,11 @@ import { Plant } from '../model/plantModel.js'
  */
 export class ResourceController {
     /**
-     * Adds a plant to the api and if this is successful, adds same image to database.
+     * Handles plant recources - creating, reading (individual plant and a collection of all plants), updating and deleting.
      *
      * @param {object} req - Express request object.
      * @param {object} res - Express response object.
+     * @param {Function} next - Express next middleware function.
      */
 
 
@@ -60,10 +61,6 @@ export class ResourceController {
 
             let filteredCollection = query.getFilter(); // `{ name: 'Jean-Luc Picard' }`
             const doc = await query.exec();
-
-
-
-
 
             let pagination = {
                 currentPage: page,
@@ -177,7 +174,6 @@ export class ResourceController {
             const update = updateBody
 
             let plant = await Plant.findOneAndUpdate(filter, update, { new: true })
-            plant = await Plant.findOne(filter)
             let result
             if (plant) {
                 result = Object.assign({}, { message: "Update successful." }, plant._doc,
@@ -187,7 +183,7 @@ export class ResourceController {
                         "delete": { rel: "delete", method: "DELETE", title: 'Delete Plant', href: (this.globalAdress() + '/id/' + req.params.id) },
                         "parent": { rel: "Up", method: "GET", title: 'List Plants', href: this.globalAdress() }
                     })
-                res.status(201).json({ result })
+                res.status(200).json({ result })
             } else {
                 res.status(404).json({ message: "No plant with this id: " + id + " exists!" })
             }
@@ -212,11 +208,11 @@ export class ResourceController {
                 result = Object.assign({}, { message: "Update successful." }, plant._doc,
                     {
                         "self": { rel: "self", method: "PUT", href: (this.globalAdress() + '/common-name/' + newName) },
-                        "list plant": { rel: "list specific plant", method: "GET", href1: (this.globalAdress() + '/common-name/' +  newName) },
-                        "delete": { rel: "delete", method: "DELETE", title: 'Delete Plant', href: (this.globalAdress() + '/common-name/' +  newName) },
+                        "list plant": { rel: "list specific plant", method: "GET", href1: (this.globalAdress() + '/common-name/' + newName) },
+                        "delete": { rel: "delete", method: "DELETE", title: 'Delete Plant', href: (this.globalAdress() + '/common-name/' + newName) },
                         "parent": { rel: "Up", method: "GET", title: 'List Plants', href: this.globalAdress() }
                     })
-                res.status(201).json({ result })
+                res.status(200).json({ result })
             } else {
                 res.status(404).json({ message: "No plant with this name: " + commonName + " exists!" })
             }
@@ -241,7 +237,7 @@ export class ResourceController {
                         "parent": { rel: "Up", method: "GET", title: 'List plants', href: this.globalAdress() }
 
                     })
-                res.status(201).json({ result })
+                res.status(200).json({ result })
             }
             else {
                 res.status(404).json({ message: "No plant with this id: " + id + " exists!" })
@@ -265,7 +261,7 @@ export class ResourceController {
                         "parent": { rel: "Up", method: "GET", title: 'List plants', href: this.globalAdress() }
 
                     })
-                res.status(201).json({ result })
+                res.status(200).json({ result })
             } else {
                 res.status(404).json({ message: "No plant with this name: " + commonName + " exists!" })
             }

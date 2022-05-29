@@ -4,22 +4,22 @@
  * @version 1.0.0
  */
 
-// import createError from 'http-errors'
 import jwt from 'jsonwebtoken'
 import createError from 'http-errors'
-import { User } from '../model/userModel.js'
+import { User } from '../model/user-model.js'
 
 /**
  * Encapsulates a controller.
  */
 export class UserController {
     /**
-     * Authenticates a user.
+     * Handles login, registration and authentication of user.
      *
      * @param {object} req - Express request object.
      * @param {object} res - Express response object.
      * @param {Function} next - Express next middleware function.
      */
+
     async login(req, res, next) {
         console.log('Logging in...')
         try {
@@ -48,13 +48,6 @@ export class UserController {
         }
     }
 
-    /**
-     * Registers a user.
-     *
-     * @param {object} req - Express request object.
-     * @param {object} res - Express response object.
-     * @param {Function} next - Express next middleware function.
-     */
     async register(req, res, next) {
         try {
             const user = await new User({
@@ -85,7 +78,7 @@ export class UserController {
     authenticateJWT(req, res, next) {
         let authorization
         try {
-            console.log('trying to authenticate...')
+            console.log('Trying to authenticate...')
             authorization = req.headers.authorization?.split(' ')
             if (authorization?.[0] !== 'Bearer') {
                 return next(createError(401, 'Invalid token'))
@@ -110,5 +103,4 @@ export class UserController {
         }
         next()
     }
-
 }

@@ -15,14 +15,12 @@ import axios from 'axios'
  */
 export class WebhookController {
     /**
-     * Authenticates a user.
+     * Handles webhooks.
      *
      * @param {object} req - Express request object.
      * @param {object} res - Express response object.
      * @param {Function} next - Express next middleware function.
      */
-
-
 
     async registerWebhook(req, res, next) {
         try {
@@ -50,12 +48,6 @@ export class WebhookController {
                         "user": user,
                         "body": newPlant
                     }
-                    // let headers = {
-                    //     'Content-Type': 'application/json;charset=UTF-8',
-                    //     "Access-Control-Allow-Origin": "*",
-                    //     "Secret": secret
-                    // }
-                    // await axios.post(url, body, headers)
 
                     axios.post(url, body, {
                         headers: {
@@ -63,7 +55,7 @@ export class WebhookController {
                             "Access-Control-Allow-Origin": "*",
                             "Secret": secret
                         }
-                    });
+                    })
                     console.log('Webhook successfully sent!')
                 }
             }
