@@ -22,15 +22,15 @@ export class ResourceController {
      */
 
 
-     welcomeMessage(req, res){
+    welcomeMessage(req, res) {
         let result = 'Welcome to my Plant API!'
-        res.status(200).json(result) 
-     }
+        res.status(200).json(result)
+    }
 
     //---------------------------------------------------------GET----------------------------------------------------------------------------------
 
     globalAdress() {
-        let url = 'https://futureadress.herokuapp.com/api/plants/'
+        let url = 'https://api-plants-es.herokuapp.com/plants'
         return url
     }
 
@@ -61,7 +61,6 @@ export class ResourceController {
             let filteredCollection = query.getFilter(); // `{ name: 'Jean-Luc Picard' }`
             const doc = await query.exec();
 
-            console.log(doc)
 
 
 
@@ -75,10 +74,12 @@ export class ResourceController {
 
             const links = {
                 "self": { rel: "self", method: "GET", href: this.globalAdress() },
-                "Create new plant": { rel: "Create new plant", method: "POST", title: 'Create plant', href: this.globalAdress() }
+                "Create new plant": { rel: "Create new plant", method: "POST", title: 'Create plant', href: this.globalAdress() },
+                "Delete plant by id": { rel: "delete", method: "DELETE", title: 'Delete Plant', href: this.globalAdress() + '/id/' + '<id-of-plant>' },
+                "Delete plant by common name": { rel: "delete", method: "DELETE", title: 'Delete Plant', href: this.globalAdress() + '/common-name/' + '<common-name-of-plant>' }
             }
             if (plants) {
-                result = Object.assign({}, pagination, plants, links)
+                result = Object.assign({}, { pagination }, plants, links)
                 res.status(200).json(result)
             }
             else {
@@ -97,9 +98,9 @@ export class ResourceController {
             if (plant) {
                 result = Object.assign({}, plant._doc,
                     {
-                        self: { rel: "self", method: "GET", href: (this.globalAdress() + id) },
-                        update: { rel: "update", method: "PUT", title: 'Update Plant', href: (this.globalAdress() + id) },
-                        delete: { rel: "delete", method: "DELETE", title: 'Delete Plant', href: (this.globalAdress() + id) },
+                        self: { rel: "self", method: "GET", href: (this.globalAdress() + '/id/' + id) },
+                        update: { rel: "update", method: "PUT", title: 'Update Plant', href: (this.globalAdress() + '/id/' + id) },
+                        delete: { rel: "delete", method: "DELETE", title: 'Delete Plant', href: (this.globalAdress() + '/id/' + id) },
                         "parent": { rel: "Up", method: "GET", title: 'List Plants', href: this.globalAdress() }
                     })
                 res.status(200).json(result)
@@ -120,9 +121,9 @@ export class ResourceController {
             if (plant) {
                 result = Object.assign({}, plant._doc,
                     {
-                        self: { rel: "self", method: "GET", href: (this.globalAdress() + commonName) },
-                        update: { rel: "update", method: "PUT", title: 'Update Plant', href: (this.globalAdress() + commonName) },
-                        delete: { rel: "delete", method: "DELETE", title: 'Delete Plant', href: (this.globalAdress() + commonName) },
+                        self: { rel: "self", method: "GET", href: (this.globalAdress() + '/common-name/' + commonName) },
+                        update: { rel: "update", method: "PUT", title: 'Update Plant', href: (this.globalAdress() + '/common-name/' + commonName) },
+                        delete: { rel: "delete", method: "DELETE", title: 'Delete Plant', href: (this.globalAdress() + '/common-name/' + commonName) },
                         "parent": { rel: "Up", method: "GET", title: 'List Plants', href: this.globalAdress() }
                     })
                 res.status(200).json(result)
@@ -143,13 +144,13 @@ export class ResourceController {
             let plant = await new Plant({ commonName: req.body.commonName, typeOfPlant: req.body.typeOfPlant, latinName: req.body.latinName, description: req.body.description, difficultyLevel: req.body.difficultyLevel, standardSize: req.body.standardSize, sunPreference: req.body.sunPreference, idealTemperature: req.body.idealTemperature, idealHumidity: req.body.idealHumidity, idealMoisture: req.body.idealMoisture, idealSoil: req.body.idealSoil, regrowthInstructions: req.body.regrowthInstructions, nutritionalInstructions: req.body.nutritionalInstructions, poisonous: req.body.poisonous, wikipediaLink: req.body.wikipediaLink })
             let result
             const response = await plant.save()
-            
+
             if (response) {
                 result = Object.assign({}, { message: "Plant with name: " + plant.commonName + " and id: " + plant._id + " was created and added to database." }, plant._doc,
                     {
                         self: { rel: "self", method: "POST", href: (this.globalAdress()) },
-                        update: { rel: "update", method: "PUT", title: 'Update Plant', href1: (this.globalAdress() + plant._id), href2: (this.globalAdress() + plant.commonName) },
-                        delete: { rel: "delete", method: "DELETE", title: 'Delete Plant', href1: (this.globalAdress() + plant._id), href2: (this.globalAdress() + plant.commonName) },
+                        update: { rel: "update", method: "PUT", title: 'Update Plant', href1: (this.globalAdress() + '/id/' + plant._id), href2: (this.globalAdress() + '/common-name/' + plant.commonName) },
+                        delete: { rel: "delete", method: "DELETE", title: 'Delete Plant', href1: (this.globalAdress() + '/id/' + plant._id), href2: (this.globalAdress() + '/common-name/' + plant.commonName) },
                         "parent": { rel: "Up", method: "GET", title: 'List Plants', href: this.globalAdress() }
                     })
                 res.status(201).json(result)
@@ -181,9 +182,9 @@ export class ResourceController {
             if (plant) {
                 result = Object.assign({}, { message: "Update successful." }, plant._doc,
                     {
-                        "self": { rel: "self", method: "PUT", href: (this.globalAdress() + req.params.id) },
-                        "list plant": { rel: "list specific plant", method: "GET", href1: (this.globalAdress() + req.params.id) },
-                        "delete": { rel: "delete", method: "DELETE", title: 'Delete Plant', href: (this.globalAdress() + req.params.id) },
+                        "self": { rel: "self", method: "PUT", href: (this.globalAdress() + '/id/' + req.params.id) },
+                        "list plant": { rel: "list specific plant", method: "GET", href: (this.globalAdress() + '/id/' + req.params.id) },
+                        "delete": { rel: "delete", method: "DELETE", title: 'Delete Plant', href: (this.globalAdress() + '/id/' + req.params.id) },
                         "parent": { rel: "Up", method: "GET", title: 'List Plants', href: this.globalAdress() }
                     })
                 res.status(201).json({ result })
@@ -210,9 +211,9 @@ export class ResourceController {
             if (plant) {
                 result = Object.assign({}, { message: "Update successful." }, plant._doc,
                     {
-                        "self": { rel: "self", method: "PUT", href: (this.globalAdress() + newName) },
-                        "list plant": { rel: "list specific plant", method: "GET", href1: (this.globalAdress() + newName) },
-                        "delete": { rel: "delete", method: "DELETE", title: 'Delete Plant', href: (this.globalAdress() + newName) },
+                        "self": { rel: "self", method: "PUT", href: (this.globalAdress() + '/common-name/' + newName) },
+                        "list plant": { rel: "list specific plant", method: "GET", href1: (this.globalAdress() + '/common-name/' +  newName) },
+                        "delete": { rel: "delete", method: "DELETE", title: 'Delete Plant', href: (this.globalAdress() + '/common-name/' +  newName) },
                         "parent": { rel: "Up", method: "GET", title: 'List Plants', href: this.globalAdress() }
                     })
                 res.status(201).json({ result })
@@ -234,9 +235,9 @@ export class ResourceController {
             if (plant) {
                 result = Object.assign({}, { message: "Deletion successful." }, plant._doc,
                     {
-                        "self": { rel: "self", method: "DELETE", href: (this.globalAdress() + req.params.id) },
-                        update: { rel: "update", method: "PUT", title: 'Update plants', href: (this.globalAdress() + req.params.id) },
-                        "list plant by id": { rel: "list specific plant", method: "GET", href: (this.globalAdress() + req.params.id) },
+                        "self": { rel: "self", method: "DELETE", href: (this.globalAdress() + '/id/' + req.params.id) },
+                        update: { rel: "update", method: "PUT", title: 'Update plants', href: (this.globalAdress() + '/id/' + req.params.id) },
+                        "list plant by id": { rel: "list specific plant", method: "GET", href: (this.globalAdress() + '/id/' + req.params.id) },
                         "parent": { rel: "Up", method: "GET", title: 'List plants', href: this.globalAdress() }
 
                     })
@@ -258,15 +259,16 @@ export class ResourceController {
             if (plant) {
                 result = Object.assign({}, { message: "Deletion successful." }, plant._doc,
                     {
-                        "self": { rel: "self", method: "DELETE", href: (this.globalAdress() + commonName) },
-                        update: { rel: "update", method: "PUT", title: 'Update plants', href: (this.globalAdress() + commonName) },
-                        "list plant by id": { rel: "list specific plant", method: "GET", href: (this.globalAdress() + commonName) },
+                        "self": { rel: "self", method: "DELETE", href: (this.globalAdress() + '/common-name/' + commonName) },
+                        update: { rel: "update", method: "PUT", title: 'Update plants', href: (this.globalAdress() + '/common-name/' + commonName) },
+                        "list plant by id": { rel: "list specific plant", method: "GET", href: (this.globalAdress() + '/common-name/' + commonName) },
                         "parent": { rel: "Up", method: "GET", title: 'List plants', href: this.globalAdress() }
 
                     })
                 res.status(201).json({ result })
+            } else {
+                res.status(404).json({ message: "No plant with this name: " + commonName + " exists!" })
             }
-            res.status(404).json({ message: "No plant with this name: " + commonName + " exists!" })
         } catch (error) {
             next(createError(error.status, error.message))
         }

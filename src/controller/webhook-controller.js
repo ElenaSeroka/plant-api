@@ -48,18 +48,24 @@ export class WebhookController {
                     let user = webhook.user
                     let body = {
                         "user": user,
-                        "secret": secret,
                         "body": newPlant
                     }
-                    let headers = {
-                        'Content-Type': 'application/json;charset=UTF-8',
-                        "Access-Control-Allow-Origin": "*",
-                        "Secret": secret
-                    }
-                    axios.post(url, body, headers)
+                    // let headers = {
+                    //     'Content-Type': 'application/json;charset=UTF-8',
+                    //     "Access-Control-Allow-Origin": "*",
+                    //     "Secret": secret
+                    // }
+                    // await axios.post(url, body, headers)
+
+                    axios.post(url, body, {
+                        headers: {
+                            'Content-Type': 'application/json;charset=UTF-8',
+                            "Access-Control-Allow-Origin": "*",
+                            "Secret": secret
+                        }
+                    });
+                    console.log('Webhook successfully sent!')
                 }
-                let result = { message: "Webhooks pinged!" }
-                res.status(200).json(result)
             }
             else {
                 res.status(404).json({ message: "Unsuccessful at sending webhooks!" })
