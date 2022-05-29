@@ -34,7 +34,7 @@ const main = async () => {
     next()
   })
 
-  // app.use(express.json({ limit: '500kb' }))
+  app.use(express.json({ limit: '500kb' }))
   // Set various HTTP headers to make the application little more secure (https://www.npmjs.com/package/helmet).
   app.use(
     helmet({

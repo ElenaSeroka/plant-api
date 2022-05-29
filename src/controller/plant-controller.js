@@ -39,31 +39,34 @@ export class ResourceController {
         try {
 
             let limit = parseInt(req.query.limit) || 5
-            let offset = parseInt(req.query.offset) || 0
-            let page = parseInt(req.query.page) || 1
-            let type = req.query.typeOfPlant
+            let skip = parseInt(req.query.skip) || 0
+            let filter = req.query.kossa
+            // let currentPage = ((limit * page) - limit) + 1 + skip
 
-            let currentPage = ((limit * page) - limit) + 1 + offset
+            // console.log(req.query)
+            // const searchParams = (filter) => {
+            //     let filterString = ''
+            //     filter = filter.replace(/[\(\)]/g, '')
+            //     const fieldsArray = filter.split(',')
+            //     const trimedArray = fieldsArray.map((field) => field.trim())
+            //     trimedArray.forEach((field) => {
+            //         filterString += field + ' '
+            //     })
+
+            //     return filterString
+            // }
+
+
             let plants = await Plant.find()
-                .skip(currentPage)
+                .skip(skip)
                 .limit(limit)
+            // .select(searchParams)
 
             let result
             let count = await Plant.countDocuments()
-
             const totalPages = Math.ceil(count / limit)
 
-            const query = Plant.find(
-                { typeOfPlant: type }
-            )
-
-
-
-            let filteredCollection = query.getFilter(); // `{ name: 'Jean-Luc Picard' }`
-            const doc = await query.exec();
-
             let pagination = {
-                currentPage: page,
                 totalPages: totalPages,
                 totalNrOfPlants: count,
                 DocumentsPerPage: limit
