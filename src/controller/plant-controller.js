@@ -40,27 +40,10 @@ export class ResourceController {
 
             let limit = parseInt(req.query.limit) || 5
             let skip = parseInt(req.query.skip) || 0
-            let filter = req.query.kossa
-            // let currentPage = ((limit * page) - limit) + 1 + skip
-
-            // console.log(req.query)
-            // const searchParams = (filter) => {
-            //     let filterString = ''
-            //     filter = filter.replace(/[\(\)]/g, '')
-            //     const fieldsArray = filter.split(',')
-            //     const trimedArray = fieldsArray.map((field) => field.trim())
-            //     trimedArray.forEach((field) => {
-            //         filterString += field + ' '
-            //     })
-
-            //     return filterString
-            // }
-
 
             let plants = await Plant.find()
                 .skip(skip)
                 .limit(limit)
-            // .select(searchParams)
 
             let result
             let count = await Plant.countDocuments()
@@ -141,7 +124,13 @@ export class ResourceController {
 
     async addPlant(req, res, next) {
         try {
-            let plant = await new Plant({ commonName: req.body.commonName, typeOfPlant: req.body.typeOfPlant, latinName: req.body.latinName, description: req.body.description, difficultyLevel: req.body.difficultyLevel, standardSize: req.body.standardSize, sunPreference: req.body.sunPreference, idealTemperature: req.body.idealTemperature, idealHumidity: req.body.idealHumidity, idealMoisture: req.body.idealMoisture, idealSoil: req.body.idealSoil, regrowthInstructions: req.body.regrowthInstructions, nutritionalInstructions: req.body.nutritionalInstructions, poisonous: req.body.poisonous, wikipediaLink: req.body.wikipediaLink })
+            let commonName = req.body.commonName.trim()
+            var finalName = commonName.replace(/ /g, "-");
+
+            let typeOfPlant = req.body.typeOfPlant.trim()
+            var finalType = typeOfPlant.replace(/ /g, "-");
+
+            let plant = await new Plant({ commonName: finalName, typeOfPlant: finalType, latinName: req.body.latinName, description: req.body.description, difficultyLevel: req.body.difficultyLevel, standardSize: req.body.standardSize, sunPreference: req.body.sunPreference, idealTemperature: req.body.idealTemperature, idealHumidity: req.body.idealHumidity, idealMoisture: req.body.idealMoisture, idealSoil: req.body.idealSoil, regrowthInstructions: req.body.regrowthInstructions, nutritionalInstructions: req.body.nutritionalInstructions, poisonous: req.body.poisonous, wikipediaLink: req.body.wikipediaLink })
             let result
             const response = await plant.save()
 
@@ -273,3 +262,5 @@ export class ResourceController {
         }
     }
 }
+
+

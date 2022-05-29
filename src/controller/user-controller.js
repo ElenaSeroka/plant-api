@@ -23,6 +23,7 @@ export class UserController {
     async login(req, res, next) {
         console.log('Logging in...')
         try {
+
             const user = await User.authenticate(req.body.email, req.body.password)
 
             const payload = {
@@ -50,6 +51,20 @@ export class UserController {
 
     async register(req, res, next) {
         try {
+
+            const str = req.body.email;
+            const body = req.body
+
+            if (!body.email || !body.password) {
+                console.log('Must enter email and password to register!')
+                return next(createError(400, 'Must enter email and password to register!'))
+            }
+
+            if (!str.includes('@')) {
+                console.log('Username must be an email adress!')
+                return next(createError(400, 'Username must be an email adress!'))
+            }
+
             const user = await new User({
                 email: req.body.email,
                 password: req.body.password

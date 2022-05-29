@@ -10,8 +10,8 @@ import { UserController } from '../controller/user-controller.js'
 export const userRouter = express.Router()
 const userController = new UserController()
 
-userRouter.post('/register', userController.authenticateJWT, (req, res, next) => userController.register(req, res, next))
-userRouter.post('/login', (req, res, next) => userController.login(req, res, next))
+userRouter.post('/register', (req, res, next) => userController.register(req, res, next))
+userRouter.post('/login', userController.authenticateJWT, (req, res, next) => userController.login(req, res, next))
 
 
 
