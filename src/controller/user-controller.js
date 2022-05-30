@@ -70,6 +70,11 @@ export class UserController {
                 password: req.body.password
             })
 
+            if (req.body.password.length < 10) {
+                console.log('Password must have 10 characters!')
+                return next(createError(400, 'Password must have 10 characters!'))
+            }
+
             const response = await user.save()
             res
                 .status(201)

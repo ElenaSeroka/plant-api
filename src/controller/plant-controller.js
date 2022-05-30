@@ -24,8 +24,22 @@ export class ResourceController {
 
 
     welcomeMessage(req, res) {
-        let result = 'Welcome to my Plant API!'
-        res.status(200).json(result)
+
+        const links = {
+            "self": { rel: "self", method: "GET", href: 'https://api-plants-es.herokuapp.com/' },
+            
+            'info': { readme: 'Welcome to this Plant REST API.You need to register and login before you can interact with the resources in this API. You can also register for a webhook, to get a notification when a new plant is added (please specify a URL to which the hook should be sent). To register and login you must provide email and password as keys in your message body. To register webhooks you must provide email, secret and url as keys in your message body.To add a plant, you must provide either id or common-name as keys in your message body, along with type-of-plant. You can find all plants in the collection, as well as additional actions by using the following links:' },
+           
+            "Register to API": { rel: "post", method: "POST", title: 'Register user', href: 'https://api-plants-es.herokuapp.com/users/register' },
+            "Login to API": { rel: "post", method: "POST", title: 'Login user', href: 'https://api-plants-es.herokuapp.com/users/login' },
+            "Register for webhook": { rel: "post", method: "POST", title: 'Register webhook', href: 'https://api-plants-es.herokuapp.com/webhook/register' },
+            "List all plants": { rel: "get", method: "GET", title: 'List all plants', href: 'https://api-plants-es.herokuapp.com/plants' },
+            "Get plant by id": { rel: "get", method: "GET", title: 'Get plant by id', href: 'https://api-plants-es.herokuapp.com/plants/id/<id-of-plant>' },
+            "Get plant by common name": { rel: "get", method: "GET", title: 'Get plant by common name', href: 'https://api-plants-es.herokuapp.com/plants/common-name/<common-name-of-plant>' },
+            "Create new plant": { rel: "Create new plant", method: "POST", title: 'Create plant', href: this.globalAdress() },
+        }
+
+        res.status(200).json({ message: "Welcome to the Plants API!", links })
     }
 
     //---------------------------------------------------------GET----------------------------------------------------------------------------------
@@ -126,11 +140,13 @@ export class ResourceController {
         try {
             let commonName = req.body.commonName.trim()
             var finalName = commonName.replace(/ /g, "-");
+            let resultName = finalName.toLowerCase()
 
             let typeOfPlant = req.body.typeOfPlant.trim()
             var finalType = typeOfPlant.replace(/ /g, "-");
+            let resultType = finalType.toLowerCase()
 
-            let plant = await new Plant({ commonName: finalName, typeOfPlant: finalType, latinName: req.body.latinName, description: req.body.description, difficultyLevel: req.body.difficultyLevel, standardSize: req.body.standardSize, sunPreference: req.body.sunPreference, idealTemperature: req.body.idealTemperature, idealHumidity: req.body.idealHumidity, idealMoisture: req.body.idealMoisture, idealSoil: req.body.idealSoil, regrowthInstructions: req.body.regrowthInstructions, nutritionalInstructions: req.body.nutritionalInstructions, poisonous: req.body.poisonous, wikipediaLink: req.body.wikipediaLink })
+            let plant = await new Plant({ commonName: resultName, typeOfPlant: resultType, latinName: req.body.latinName, description: req.body.description, difficultyLevel: req.body.difficultyLevel, standardSize: req.body.standardSize, sunPreference: req.body.sunPreference, idealTemperature: req.body.idealTemperature, idealHumidity: req.body.idealHumidity, idealMoisture: req.body.idealMoisture, idealSoil: req.body.idealSoil, regrowthInstructions: req.body.regrowthInstructions, nutritionalInstructions: req.body.nutritionalInstructions, poisonous: req.body.poisonous, wikipediaLink: req.body.wikipediaLink })
             let result
             const response = await plant.save()
 

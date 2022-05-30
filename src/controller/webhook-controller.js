@@ -45,8 +45,8 @@ export class WebhookController {
                     let secret = webhook.secret
                     let user = webhook.user
                     let body = {
-                        "user": user,
-                        "body": newPlant
+                        "added-by-user": user,
+                        "new-plant": newPlant
                     }
 
                     axios.post(url, body, {
