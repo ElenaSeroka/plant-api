@@ -18,11 +18,8 @@ router.get('/', (req, res) => controller.welcomeMessage(req, res))
 
 router.use('/users/', userRouter)
 router.use('/plants/', plantsRouter)
-router.use('/webhook/', webhookRouter)
+router.use('/webhooks/', webhookRouter)
 
 router.use('*', (req, res, next) => next(createError(500)))
-
-
-
 
 
