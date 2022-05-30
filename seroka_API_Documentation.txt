@@ -1,0 +1,38 @@
+https://api-plants-es.herokuapp.com/ (HTTP METHOD: GET)
+Entry-point for the API. Links to other parts of the API, and gives a breif explenation of how to use the API.
+
+https://api-plants-es.herokuapp.com/users/register (HTTP METHOD: POST)
+Registers a new user.
+
+https://api-plants-es.herokuapp.com/webhooks/register (HTTP METHOD: POST)
+Registers a new webhook.
+
+https://api-plants-es.herokuapp.com/users/login (HTTP METHOD: POST)
+User log in.
+
+https://api-plants-es.herokuapp.com/plants (HTTP METHOD: GET)
+List all plants in database and their information.
+
+https://api-plants-es.herokuapp.com/plants?skip={number}&limit={number} (HTTP METHOD: GET)
+List all plants in database and their information with pagination.
+
+https://api-plants-es.herokuapp.com/plants (HTTP METHOD: POST)
+Create and save a plant to DB.
+
+https://api-plants-es.herokuapp.com/plants/id/{id} (HTTP METHOD: GET)
+List information of a specifik plant by using the plant id.
+
+https://api-plants-es.herokuapp.com/plants/id/{id} (HTTP METHOD: PUT)
+Update a plant in DB by using the plant id.
+
+https://api-plants-es.herokuapp.com/plants/id/{id} (HTTP METHOD: DELETE)
+Delete a plant in DB by using the plant id.
+
+https://api-plants-es.herokuapp.com/plants/common-name/{common-name} (HTTP METHOD: GET)
+List information of a specifik plant by using the plants common name.
+
+https://api-plants-es.herokuapp.com/plants/common-name/{common-name} (HTTP METHOD: PUT)
+Update a plant by using the plants common name.
+
+https://api-plants-es.herokuapp.com/plants/common-name/{common-name} (HTTP METHOD: DELETE)
+Delete a plant by using the plants common name.
