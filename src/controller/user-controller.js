@@ -113,7 +113,7 @@ export class UserController {
                 (error, response) => {
                     if (error) {
                         console.log('-----------------------------')
-                        next(createError(403, '"Authorization failed. Please check your jwt token'))
+                        next(createError(403, 'Authorization failed. Please check your jwt token'))
                     }
                     req.user = response.sub
                 })
